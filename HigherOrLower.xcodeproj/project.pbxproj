@@ -6,14 +6,57 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		60E0EE6E2D2B59CA001D1AF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60E0EE6D2D2B59CA001D1AF9 /* Assets.xcassets */; };
+		60E0EE702D2B59DA001D1AF9 /* HigherOrLowerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0EE6F2D2B59DA001D1AF9 /* HigherOrLowerApp.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		60AF7A892D2B50600023DE6A /* HigherOrLower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HigherOrLower.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		60E0EE6D2D2B59CA001D1AF9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		60E0EE6F2D2B59DA001D1AF9 /* HigherOrLowerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HigherOrLowerApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		60E0EE6B2D2B5964001D1AF9 /* Exceptions for "Preview Content" folder in "HigherOrLower" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Preview Assets.xcassets",
+			);
+			target = 60AF7A882D2B50600023DE6A /* HigherOrLower */;
+		};
+		60E0EE6C2D2B5964001D1AF9 /* Exceptions for "Views" folder in "HigherOrLower" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GameOverView.swift,
+				GameView.swift,
+				HomeView.swift,
+				HowToPlayView.swift,
+			);
+			target = 60AF7A882D2B50600023DE6A /* HigherOrLower */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		60AF7A8B2D2B50600023DE6A /* HigherOrLower */ = {
+		60E0EE5C2D2B5963001D1AF9 /* Models */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = HigherOrLower;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		60E0EE5E2D2B5963001D1AF9 /* Preview Content */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				60E0EE6B2D2B5964001D1AF9 /* Exceptions for "Preview Content" folder in "HigherOrLower" target */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		60E0EE632D2B5963001D1AF9 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				60E0EE6C2D2B5964001D1AF9 /* Exceptions for "Views" folder in "HigherOrLower" target */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,8 +75,12 @@
 		60AF7A802D2B50600023DE6A = {
 			isa = PBXGroup;
 			children = (
-				60AF7A8B2D2B50600023DE6A /* HigherOrLower */,
+				60E0EE5C2D2B5963001D1AF9 /* Models */,
+				60E0EE5E2D2B5963001D1AF9 /* Preview Content */,
+				60E0EE632D2B5963001D1AF9 /* Views */,
 				60AF7A8A2D2B50600023DE6A /* Products */,
+				60E0EE6D2D2B59CA001D1AF9 /* Assets.xcassets */,
+				60E0EE6F2D2B59DA001D1AF9 /* HigherOrLowerApp.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,7 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				60AF7A8B2D2B50600023DE6A /* HigherOrLower */,
+				60E0EE5C2D2B5963001D1AF9 /* Models */,
 			);
 			name = HigherOrLower;
 			packageProductDependencies = (
@@ -109,6 +156,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60E0EE6E2D2B59CA001D1AF9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60E0EE702D2B59DA001D1AF9 /* HigherOrLowerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,7 +300,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"HigherOrLower/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";
 				DEVELOPMENT_TEAM = D2GRT69L42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -280,7 +329,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"HigherOrLower/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";
 				DEVELOPMENT_TEAM = D2GRT69L42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
