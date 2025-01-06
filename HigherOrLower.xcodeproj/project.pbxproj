@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		60E0EE6E2D2B59CA001D1AF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60E0EE6D2D2B59CA001D1AF9 /* Assets.xcassets */; };
 		60E0EE702D2B59DA001D1AF9 /* HigherOrLowerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0EE6F2D2B59DA001D1AF9 /* HigherOrLowerApp.swift */; };
+		60E0EEC22D2B7CFC001D1AF9 /* holdb.csv in Resources */ = {isa = PBXBuildFile; fileRef = 60E0EEC02D2B7CFC001D1AF9 /* holdb.csv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		60AF7A892D2B50600023DE6A /* HigherOrLower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HigherOrLower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60E0EE6D2D2B59CA001D1AF9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		60E0EE6F2D2B59DA001D1AF9 /* HigherOrLowerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HigherOrLowerApp.swift; sourceTree = "<group>"; };
+		60E0EEC02D2B7CFC001D1AF9 /* holdb.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = holdb.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -81,6 +83,7 @@
 				60AF7A8A2D2B50600023DE6A /* Products */,
 				60E0EE6D2D2B59CA001D1AF9 /* Assets.xcassets */,
 				60E0EE6F2D2B59DA001D1AF9 /* HigherOrLowerApp.swift */,
+				60E0EEC12D2B7CFC001D1AF9 /* Data */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +93,14 @@
 				60AF7A892D2B50600023DE6A /* HigherOrLower.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		60E0EEC12D2B7CFC001D1AF9 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				60E0EEC02D2B7CFC001D1AF9 /* holdb.csv */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -157,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60E0EE6E2D2B59CA001D1AF9 /* Assets.xcassets in Resources */,
+				60E0EEC22D2B7CFC001D1AF9 /* holdb.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

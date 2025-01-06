@@ -1,27 +1,23 @@
 Fact,Value,Unit
 Number of songs in the Spotify catalog,100000000,songs
-Number of active gamers worldwide,3,billion
-Number of songs available on Spotify,70,million
+Number of active gamers worldwide,3100000000,gamers
 Number of Netflix subscribers worldwide (2021),209,million
-Number of YouTube videos watched daily,1,billion
-Number of emails sent per day worldwide (2021),320,billion
-Number of websites on the internet (2021),2,billion
+Number of emails sent per day worldwide (2021),319600000000,emails
+Number of websites on the internet (2021),1880000000,websites
 Number of McDonald's restaurants worldwide (2021),39198,restaurants
-Number of Coca-Cola servings consumed daily,2,billion
-Number of hamburgers eaten by Americans annually,50,billion
-Number of hot dogs consumed by Americans annually,20,billion
+Number of Coca-Cola servings consumed daily,1900000000,servings
+Number of hamburgers eaten by Americans annually,50000000000,burgers
+Number of hot dogs consumed by Americans annually,20000000000,hot dogs
 Number of Starbucks stores worldwide (2021),33833,stores
-Number of Apple iPhones sold worldwide (2020),217,million
-Number of active Facebook users (2021),3,billion
-Number of active Instagram users (2021),1,billion
-Number of active Twitter users (2021),397,million
-Number of active TikTok users (2024),1,billion
-Number of Google searches per day (2021),9,billion
-Number of photos uploaded to Instagram daily (2021),95,million
+Number of Apple iPhones sold worldwide (2020),217000000,phones
+Number of active Facebook users (2021),2800000000,users
+Number of active Instagram users (2021),1300000000,users
+Number of active Twitter users (2021),396500000,users
+Number of active TikTok users (2024),1000000000,users
+Number of Google searches per day (2021),8500000000,searches
+Number of photos uploaded to Instagram daily (2021),95000000,photos
 Number of videos uploaded to YouTube daily (2021),720000,hours
-Number of text messages sent per day in the U.S. (2020),6,billion
-Number of WhatsApp messages sent per day (2021),100,billion
-Number of podcast episodes available (2021),48,million
+Number of WhatsApp messages sent per day (2023),140000000000,messages
 Number of books published annually worldwide (2021),2,million
 Number of words in the English language,171146,words
 Number of languages spoken worldwide,7139,languages
@@ -48,7 +44,6 @@ Height of Mount Everest,8849,meters
 Height of the Burj Khalifa,828,meters
 Standard atmospheric pressure,101325,pascals
 Absolute zero temperature,-273,degrees Celsius
-Golden ratio (φ),2,dimensionless
 Average human body temperature,37,degrees Celsius
 Number of continents,7,count
 Number of planets in the Solar System,8,count

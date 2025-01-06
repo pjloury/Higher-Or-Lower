@@ -7,11 +7,51 @@ struct GameView: View {
     @State private var isDragging = false
     @State private var lastGuessResult: GuessResult?
     
+    private func formatLargeNumber(_ number: Double, isYear: Bool = false) -> String {
+        if isYear {
+            return "\(Int(number))"
+        } else if number >= 1_000_000_000 {
+            // Round to nearest 0.1 billion
+            let billions = (number / 1_000_000_000).rounded(to: 1)
+            return String(format: "%.1f billion", billions)
+        } else if number >= 1_000_000 {
+            // Round to nearest 0.1 million
+            let millions = (number / 1_000_000).rounded(to: 1)
+            return String(format: "%.1f million", millions)
+        } else {
+            return NumberFormatter.localizedString(from: NSNumber(value: Int(number)), number: .decimal)
+        }
+    }
+    
+    private func getSliderStep(for value: Double) -> Double {
+        if value >= 1_000_000_000 {
+            return 100_000_000  // 0.1 billion steps
+        } else if value >= 1_000_000 {
+            return 100_000  // 0.1 million steps
+        } else {
+            return 1.0
+        }
+    }
+    
     private func updateSliderRange(for question: Question) {
         let proposedValue = Double(question.proposedValue)
-        let minValue = proposedValue * 0.5
-        let maxValue = proposedValue * 1.5
-        sliderRange = minValue...maxValue
+        
+        if question.isYearQuestion {
+            let currentYear = Double(Calendar.current.component(.year, from: Date()))
+            let maxYear = min(currentYear, Double(question.correctAnswer) + 100)
+            
+            // Ensure valid range (minYear must be <= maxYear)
+            if Double(question.correctAnswer) <= maxYear {
+                sliderRange = Double(question.correctAnswer)...maxYear
+            } else {
+                // If range would be invalid, just use a single point range
+                sliderRange = Double(question.correctAnswer)...Double(question.correctAnswer)
+            }
+        } else {
+            let minValue = proposedValue * 0.5
+            let maxValue = proposedValue * 1.5
+            sliderRange = minValue...maxValue
+        }
         currentGuess = proposedValue
     }
     
@@ -53,18 +93,33 @@ struct GameView: View {
                     // Slider section
                     HStack {
                         VStack(spacing: 4) {
-                            Text("\(Int(currentGuess))")
+                            Text(formatLargeNumber(currentGuess, isYear: question.isYearQuestion))
                                 .font(.title)
                                 .monospacedDigit()
-                            Text(question.units)
+                            Text(question.isYearQuestion ? "" : question.units)
                                 .font(.title3)
+                                .foregroundColor(.secondary)
                         }
                         .frame(width: 120)
                         
                         Slider(value: $currentGuess,
                                in: sliderRange,
-                               step: 1.0,
-                               onEditingChanged: { editing in isDragging = editing }
+                               step: getSliderStep(for: currentGuess),
+                               onEditingChanged: { editing in 
+                                   isDragging = editing
+                                   if !editing {
+                                       // When dragging ends, snap to nearest increment
+                                       if currentGuess >= 1_000_000_000 {
+                                           // Snap to nearest 0.1 billion
+                                           let billions = (currentGuess / 1_000_000_000).rounded(to: 1)
+                                           currentGuess = billions * 1_000_000_000
+                                       } else if currentGuess >= 1_000_000 {
+                                           // Snap to nearest 0.1 million
+                                           let millions = (currentGuess / 1_000_000).rounded(to: 1)
+                                           currentGuess = millions * 1_000_000
+                                       }
+                                   }
+                               }
                         )
                         .rotationEffect(.degrees(-90))
 //                        .frame(height: UIScreen.main.bounds.height * 0.6)
@@ -76,10 +131,27 @@ struct GameView: View {
                     
                     // Results area with fixed height
                     VStack {
-                        if let result = lastGuessResult {                            
-                            Text("Correct Answer: \(result.correctAnswer)")
-                                .font(.title3.bold())
-                                .foregroundColor(.black)
+                        if let result = lastGuessResult {
+                            if gameManager.lives <= 0 {
+                                Text("Game Over!")
+                                    .font(.title2)
+                                    .foregroundColor(.red)
+                                    .fontWeight(.bold)
+                            }
+                            
+                            HStack {
+                                Text("Correct Answer:")
+                                    .foregroundColor(.black)
+                                if question.isYearQuestion {
+                                    Text(String(result.correctAnswer))
+                                        .font(.title3.bold())
+                                        .foregroundColor(.black)
+                                } else {
+                                    Text("\(formatLargeNumber(Double(result.correctAnswer), isYear: question.isYearQuestion)) \(question.units)")
+                                        .font(.title3.bold())
+                                        .foregroundColor(.black)
+                                }
+                            }
                             
                             let accuracyText = result.guessedTooLow ? 
                                 String(format: "-%.1f", 100.0 - abs(result.accuracyPercentage)) :
@@ -193,5 +265,13 @@ struct GameView: View {
                 updateSliderRange(for: question)
             }
         }
+    }
+}
+
+// Add extension for rounding to decimal places
+extension Double {
+    func rounded(to places: Int) -> Double {
+        let multiplier = pow(10.0, Double(places))
+        return (self * multiplier).rounded() / multiplier
     }
 } 
