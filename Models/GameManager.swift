@@ -13,6 +13,7 @@ class GameManager: ObservableObject {
     @Published var currentQuestion: Question?
     
     private var questions: [Question] = []
+    private var unusedQuestions: [Question] = []  // Track questions not yet used in this session
     
     init() {
         loadQuestionsFromCSV()
@@ -134,6 +135,9 @@ class GameManager: ObservableObject {
                 print("  Units: \(question.units)")
             }
             
+            // After successfully loading questions, initialize unusedQuestions
+            unusedQuestions = questions
+            
         } catch {
             print("Error reading file:", error)
             
@@ -150,12 +154,28 @@ class GameManager: ObservableObject {
     func startNewGame() {
         lives = 3
         score = 0
+        // Reset unused questions if we've used them all
+        if unusedQuestions.isEmpty {
+            unusedQuestions = questions
+        }
         nextQuestion()
         gameState = .playing
     }
     
     func nextQuestion() {
-        currentQuestion = questions.randomElement()
+        // If we've used all questions, reset the pool
+        if unusedQuestions.isEmpty {
+            print("All questions have been used, resetting question pool")
+            unusedQuestions = questions
+        }
+        
+        // Get a random index from unused questions
+        let randomIndex = Int.random(in: 0..<unusedQuestions.count)
+        currentQuestion = unusedQuestions[randomIndex]
+        // Remove the selected question from unused questions
+        unusedQuestions.remove(at: randomIndex)
+        
+        print("Questions remaining in pool: \(unusedQuestions.count) out of \(questions.count) total")
     }
     
     func submitGuess(_ guess: Int) -> GuessResult {
