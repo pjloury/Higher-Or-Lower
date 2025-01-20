@@ -11,11 +11,14 @@ class GameManager: ObservableObject {
     @Published var score = 0
     @Published var highScore = 0
     @Published var currentQuestion: Question?
+    @Published var isNewHighScore = false
     
     private var questions: [Question] = []
     private var unusedQuestions: [Question] = []  // Track questions not yet used in this session
     
     init() {
+        // Load high score from UserDefaults
+        highScore = UserDefaults.standard.integer(forKey: "HighScore")
         loadQuestionsFromCSV()
     }
     
@@ -151,9 +154,19 @@ class GameManager: ObservableObject {
         }
     }
     
+    private func updateHighScore(_ newScore: Int) {
+        if newScore > highScore {
+            highScore = newScore
+            isNewHighScore = true
+            // Save to UserDefaults
+            UserDefaults.standard.set(highScore, forKey: "HighScore")
+        }
+    }
+    
     func startNewGame() {
         lives = 3
         score = 0
+        isNewHighScore = false
         // Reset unused questions if we've used them all
         if unusedQuestions.isEmpty {
             unusedQuestions = questions
@@ -224,9 +237,7 @@ class GameManager: ObservableObject {
         if lostLife {
             lives -= 1
             if lives <= 0 {
-                if score > highScore {
-                    highScore = score
-                }
+                updateHighScore(score)
             }
         }
         
@@ -295,37 +306,76 @@ struct Question: Identifiable {
     let text: String
     let correctAnswer: Int
     let units: String
+    let proposedValue: Int
+    let range: ClosedRange<Double>
     
     var isYearQuestion: Bool {
         units.lowercased() == "year"
     }
     
-    var proposedValue: Int {
-        if isYearQuestion {
-            let currentYear = Calendar.current.component(.year, from: Date())
-            // For year questions, propose a random value between correct year and current year
-            let minYear = correctAnswer
-            let maxYear = min(currentYear, correctAnswer + 100) // Don't go more than 100 years ahead
+    init(text: String, correctAnswer: Int, units: String) {
+        self.text = text
+        self.correctAnswer = correctAnswer
+        self.units = units
+        
+        // Calculate range and proposed value at initialization
+        if units.lowercased() == "year" {
+            let currentYear = Double(Calendar.current.component(.year, from: Date()))
+            let eventAge = currentYear - Double(correctAnswer)
             
-            // Ensure valid range (minYear must be <= maxYear)
-            if minYear <= maxYear {
-                return Int.random(in: minYear...maxYear)
-            } else {
-                return minYear // If range is invalid, just return the correct year
-            }
+            print("Year question: \(text)")
+            print("Correct answer: \(correctAnswer)")
+            print("Current year: \(Int(currentYear))")
+            print("Event age: \(eventAge)")
+            
+            // For year questions, make the range 60-100% of the event age
+            let rangePercentage = Double.random(in: 0.6...1.0)
+            let rangeSize = max(eventAge, 10) * rangePercentage  // Ensure minimum range size
+            
+            // Center the range around the correct answer, but cap at current year
+            let prelimMaxValue = min(currentYear, Double(correctAnswer) + (rangeSize * 0.7))
+            let prelimMinValue = max(1.0, Double(correctAnswer) - (rangeSize * 0.3))
+            
+            // Ensure valid range
+            self.range = min(prelimMinValue, prelimMaxValue)...max(prelimMinValue, prelimMaxValue)
+            
+            print("Range: \(self.range)")
+            
+            // Now pick an initial guess within this range
+            let rangeWidth = self.range.upperBound - self.range.lowerBound
+            let biasedMin = self.range.lowerBound + (rangeWidth * 0.2)
+            let biasedMax = self.range.upperBound - (rangeWidth * 0.2)
+            self.proposedValue = Int(Double.random(in: biasedMin...biasedMax))
+            
+            print("Initial guess: \(self.proposedValue)")
+            
         } else {
-            // For non-year questions, keep existing logic
-            let minVariation = Double(correctAnswer) * 0.15  // Minimum 15% off
-            let maxVariation = Double(correctAnswer) * 0.40  // Maximum 40% off
-            let variation = Double.random(in: minVariation...maxVariation)
+            print("Non-year question: \(text)")
+            print("Correct answer: \(correctAnswer)")
             
-            // Randomly decide whether to add or subtract the variation
-            let shouldAdd = Bool.random()
-            let proposedValue = shouldAdd ? 
-                Double(correctAnswer) + variation : 
-                Double(correctAnswer) - variation
+            // For non-year questions, make the range centered on the correct answer
+            let rangePercentage = Double.random(in: 0.6...0.8)
+            let rangeSize = max(Double(correctAnswer) * rangePercentage, 10.0)  // Ensure minimum range size
             
-            return Int(proposedValue)
+            let minValue = max(1.0, Double(correctAnswer) - rangeSize)
+            let maxValue = Double(correctAnswer) + rangeSize
+            
+            // Ensure valid range
+            self.range = min(minValue, maxValue)...max(minValue, maxValue)
+            
+            print("Range: \(self.range)")
+            
+            // Pick initial guess within the middle 60% of the range
+            let rangeWidth = self.range.upperBound - self.range.lowerBound
+            let biasedMin = self.range.lowerBound + (rangeWidth * 0.2)
+            let biasedMax = self.range.upperBound - (rangeWidth * 0.2)
+            self.proposedValue = Int(Double.random(in: biasedMin...biasedMax))
+            
+            print("Initial guess: \(self.proposedValue)")
         }
+    }
+    
+    func calculateRange() -> ClosedRange<Double> {
+        return range
     }
 } 

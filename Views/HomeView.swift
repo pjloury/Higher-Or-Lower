@@ -9,6 +9,13 @@ struct HomeView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
+            if gameManager.highScore > 0 {
+                Text("High Score: \(gameManager.highScore)")
+                    .font(.title2)
+                    .foregroundColor(.orange)
+                    .fontWeight(.bold)
+            }
+            
             Button("New Game") {
                 gameManager.startNewGame()
             }

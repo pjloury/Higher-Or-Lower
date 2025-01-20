@@ -34,25 +34,10 @@ struct GameView: View {
     }
     
     private func updateSliderRange(for question: Question) {
-        let proposedValue = Double(question.proposedValue)
-        
-        if question.isYearQuestion {
-            let currentYear = Double(Calendar.current.component(.year, from: Date()))
-            let maxYear = min(currentYear, Double(question.correctAnswer) + 100)
-            
-            // Ensure valid range (minYear must be <= maxYear)
-            if Double(question.correctAnswer) <= maxYear {
-                sliderRange = Double(question.correctAnswer)...maxYear
-            } else {
-                // If range would be invalid, just use a single point range
-                sliderRange = Double(question.correctAnswer)...Double(question.correctAnswer)
-            }
-        } else {
-            let minValue = proposedValue * 0.5
-            let maxValue = proposedValue * 1.5
-            sliderRange = minValue...maxValue
-        }
-        currentGuess = proposedValue
+        // Get the range from the question
+        sliderRange = question.calculateRange()
+        // Set initial guess
+        currentGuess = Double(question.proposedValue)
     }
     
     private func heartsDisplay(lives: Int, total: Int = 3) -> some View {
@@ -197,11 +182,17 @@ struct GameView: View {
                                     .font(.title2)
                             }
                             
-                            if gameManager.score > gameManager.highScore {
-                                Text("Congrats! New High Score!")
-                                    .font(.title2)
-                                    .foregroundColor(.green)
-                                    .fontWeight(.bold)
+                            if gameManager.isNewHighScore {
+                                VStack(spacing: 8) {
+                                    Text("🏆 New High Score! 🏆")
+                                        .font(.title2)
+                                        .foregroundColor(.orange)
+                                        .fontWeight(.bold)
+                                    Text("\(gameManager.score) points")
+                                        .font(.title3)
+                                        .foregroundColor(.orange)
+                                }
+                                .padding(.vertical, 8)
                             }
                             
                             HStack(spacing: 20) {
