@@ -72,58 +72,64 @@ struct GameView: View {
                         .padding()
                         .fixedSize(horizontal: false, vertical: true)
                     
-                    
-                    Spacer()
-                    
-                    // Slider section
-                    HStack {
-                        VStack(spacing: 4) {
-                            Text(formatLargeNumber(currentGuess, isYear: question.isYearQuestion))
-                                .font(.title)
-                                .monospacedDigit()
-                            Text(question.isYearQuestion ? "" : question.units)
-                                .font(.title3)
-                                .foregroundColor(.secondary)
-                        }
-                        .frame(width: 120)
-                        
-                        Slider(value: $currentGuess,
-                               in: sliderRange,
-                               step: getSliderStep(for: currentGuess),
-                               onEditingChanged: { editing in 
-                                   isDragging = editing
-                                   if !editing {
-                                       // When dragging ends, snap to nearest increment
-                                       if currentGuess >= 1_000_000_000 {
-                                           // Snap to nearest 0.1 billion
-                                           let billions = (currentGuess / 1_000_000_000).rounded(to: 1)
-                                           currentGuess = billions * 1_000_000_000
-                                       } else if currentGuess >= 1_000_000 {
-                                           // Snap to nearest 0.1 million
-                                           let millions = (currentGuess / 1_000_000).rounded(to: 1)
-                                           currentGuess = millions * 1_000_000
+                    // Main content area with slider
+                    GeometryReader { geometry in
+                        HStack(spacing: 20) {
+                            // Left side spacing for iPad
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                                Spacer()
+                                    .frame(width: geometry.size.width * 0.2)
+                            }
+                            
+                            // Current guess display
+                            VStack(spacing: 4) {
+                                Text(formatLargeNumber(currentGuess, isYear: question.isYearQuestion))
+                                    .font(.title)
+                                    .monospacedDigit()
+                                Text(question.isYearQuestion ? "" : question.units)
+                                    .font(.title3)
+                                    .foregroundColor(.secondary)
+                            }
+                            .frame(width: 120)
+                            
+                            // Slider
+                            Slider(value: $currentGuess,
+                                   in: sliderRange,
+                                   step: getSliderStep(for: currentGuess),
+                                   onEditingChanged: { editing in 
+                                       isDragging = editing
+                                       if !editing {
+                                           // When dragging ends, snap to nearest increment
+                                           if currentGuess >= 1_000_000_000 {
+                                               // Snap to nearest 0.1 billion
+                                               let billions = (currentGuess / 1_000_000_000).rounded(to: 1)
+                                               currentGuess = billions * 1_000_000_000
+                                           } else if currentGuess >= 1_000_000 {
+                                               // Snap to nearest 0.1 million
+                                               let millions = (currentGuess / 1_000_000).rounded(to: 1)
+                                               currentGuess = millions * 1_000_000
+                                           }
                                        }
                                    }
-                               }
-                        )
-                        .rotationEffect(.degrees(-90))
-//                        .frame(height: UIScreen.main.bounds.height * 0.6)
-                        .disabled(lastGuessResult != nil)
+                            )
+                            .rotationEffect(.degrees(-90))
+                            .frame(width: UIDevice.current.userInterfaceIdiom == .pad ? 
+                                   geometry.size.height * 0.7 : // iPad height
+                                   geometry.size.height * 0.6)  // iPhone height
+                            .disabled(lastGuessResult != nil)
+                            
+                            // Right side spacing for iPad
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                                Spacer()
+                                    .frame(width: geometry.size.width * 0.2)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
-                    .padding(.horizontal)
-                    
-                    Spacer()
                     
                     // Results area with fixed height
                     VStack {
                         if let result = lastGuessResult {
-                            if gameManager.lives <= 0 {
-                                Text("Game Over!")
-                                    .font(.title2)
-                                    .foregroundColor(.red)
-                                    .fontWeight(.bold)
-                            }
-                            
                             HStack {
                                 Text("Correct Answer:")
                                     .foregroundColor(.black)
@@ -158,7 +164,11 @@ struct GameView: View {
                             if result.guessedTooLow {
                                 Text("Guessed too low! You lose a life 💔").foregroundColor(.red)
                             } else if result.lostLife {
-                                Text("Guessed too high! You lose a life 💔").foregroundColor(.red)
+                                if question.isYearQuestion {
+                                    Text("Guessed too far in the future! You lose a life 💔").foregroundColor(.red)
+                                } else {
+                                    Text("Guessed too high! You lose a life 💔").foregroundColor(.red)
+                                }
                             }
                         }
                     }
@@ -166,10 +176,8 @@ struct GameView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color(.systemBackground))
                     
-                    Spacer()
-                    
                     // Button section
-                    VStack(spacing: 16) {  // Added VStack for two buttons when game is over
+                    VStack(spacing: 16) {
                         if gameManager.lives <= 0 {
                             HStack(spacing: 8) {
                                 Text("Game Over!")
